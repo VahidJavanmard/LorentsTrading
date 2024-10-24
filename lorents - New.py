@@ -1,4 +1,4 @@
-
+from imports import *
 # if __name__ == '__main__':
 #     multiprocessing.freeze_support()
 #     BeautyChart.main()
