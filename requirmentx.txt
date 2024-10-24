@@ -1,0 +1,8 @@
+ccxt
+ta-lib
+numpy
+pandas
+tensorflow
+matplotlib
+scipy
+sklearn
