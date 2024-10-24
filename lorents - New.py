@@ -56,8 +56,8 @@ symbol="BTC-USDT"
 # symbol="FTM-USDT"
 
 indicatorSource='close'
-timeframe="4h"
-limit=5000
+timeframe="1d"
+limit=1000
 percentTest=0.05
 n_Candle_Train=10
 
@@ -196,28 +196,28 @@ def getLastPrice(data):
 def add_indicators(df):
     global data
     # محاسبه 20 اندیکاتور فنی
-    df['rsi'] = ta.momentum.RSIIndicator(df[indicatorSource]).rsi()
+    # df['rsi'] = ta.momentum.RSIIndicator(df[indicatorSource]).rsi()
     df['macd'] = ta.trend.MACD(df[indicatorSource]).macd()
-    df['macd_diff'] = ta.trend.MACD(df[indicatorSource]).macd_diff()
-    df['ema'] = ta.trend.EMAIndicator(df[indicatorSource]).ema_indicator()
-    df['bollinger_mavg'] = ta.volatility.BollingerBands(df[indicatorSource]).bollinger_mavg()
-    df['bollinger_hband'] = ta.volatility.BollingerBands(df[indicatorSource]).bollinger_hband()
-    df['bollinger_lband'] = ta.volatility.BollingerBands(df[indicatorSource]).bollinger_lband()
-    df['stochastic_oscillator'] = ta.momentum.StochasticOscillator(df['high'], df['low'], df['close']).stoch()
+    # df['macd_diff'] = ta.trend.MACD(df[indicatorSource]).macd_diff()
+    # df['ema'] = ta.trend.EMAIndicator(df[indicatorSource]).ema_indicator()
+    # df['bollinger_mavg'] = ta.volatility.BollingerBands(df[indicatorSource]).bollinger_mavg()
+    # df['bollinger_hband'] = ta.volatility.BollingerBands(df[indicatorSource]).bollinger_hband()
+    # df['bollinger_lband'] = ta.volatility.BollingerBands(df[indicatorSource]).bollinger_lband()
+    # df['stochastic_oscillator'] = ta.momentum.StochasticOscillator(df['high'], df['low'], df['close']).stoch()
     df['stochastic'] = ta.momentum.StochasticOscillator(df['high'], df['low'], df['close']).stoch()
-    df['cci'] = ta.trend.CCIIndicator(df['high'], df['low'], df['close']).cci()
+    # df['cci'] = ta.trend.CCIIndicator(df['high'], df['low'], df['close']).cci()
     # df['adx'] = ta.trend.ADXIndicator(df['high'], df['low'], df['close']).adx()
-    df['williams_r'] = ta.momentum.WilliamsRIndicator(df['high'], df['low'], df['close']).williams_r()
-    df['roc'] = ta.momentum.ROCIndicator(df['close']).roc()
-    df['atr'] = ta.volatility.AverageTrueRange(df['high'], df['low'], df['close']).average_true_range()
-    df['mfi'] = ta.volume.MFIIndicator(df['high'], df['low'], df['close'], df['volume']).money_flow_index()
-    df['obv'] = ta.volume.OnBalanceVolumeIndicator(df['close'], df['volume']).on_balance_volume()
-    df['force_index'] = ta.volume.ForceIndexIndicator(df['close'], df['volume']).force_index()
-    df['tsi'] = ta.momentum.TSIIndicator(df[indicatorSource]).tsi()
-    df['ultimate_oscillator'] = ta.momentum.UltimateOscillator(df['high'], df['low'], df['close']).ultimate_oscillator()
-    df['kama'] = ta.momentum.KAMAIndicator(df[indicatorSource]).kama()
-    df['dpo'] = ta.trend.DPOIndicator(df[indicatorSource]).dpo()
-    df=calculate_linear_regression_channel(df)
+    # df['williams_r'] = ta.momentum.WilliamsRIndicator(df['high'], df['low'], df['close']).williams_r()
+    # df['roc'] = ta.momentum.ROCIndicator(df['close']).roc()
+    # df['atr'] = ta.volatility.AverageTrueRange(df['high'], df['low'], df['close']).average_true_range()
+    # df['mfi'] = ta.volume.MFIIndicator(df['high'], df['low'], df['close'], df['volume']).money_flow_index()
+    # df['obv'] = ta.volume.OnBalanceVolumeIndicator(df['close'], df['volume']).on_balance_volume()
+    # df['force_index'] = ta.volume.ForceIndexIndicator(df['close'], df['volume']).force_index()
+    # df['tsi'] = ta.momentum.TSIIndicator(df[indicatorSource]).tsi()
+    # df['ultimate_oscillator'] = ta.momentum.UltimateOscillator(df['high'], df['low'], df['close']).ultimate_oscillator()
+    # df['kama'] = ta.momentum.KAMAIndicator(df[indicatorSource]).kama()
+    # df['dpo'] = ta.trend.DPOIndicator(df[indicatorSource]).dpo()
+    # df=calculate_linear_regression_channel(df)
     
     df = dropNaFix(df)
     
@@ -1319,7 +1319,7 @@ def TrainLstmSVm():
     y = data["target"]
     # X = data[['rsi', 'macd', 'bollinger_hband', 'bollinger_lband',  'mfi', 'stochastic','mid_channel','current']]
     # X = data[['close','volume','rsi','macd','macd_diff','williams_r','dpo']]
-    X = data[['close','volume','rsi','macd','macd_diff','williams_r','dpo']]
+    X = data[['stochastic', 'macd','close','volume']]
 
     # pca = PCA(n_components=0.95)  # Keep 95% of the variance
     # X = pca.fit_transform(X)
@@ -1443,7 +1443,8 @@ def Election(lstm_Model,svm_Model,knn_Model):
     y = data["target"]
     # X = data[['rsi', 'macd', 'bollinger_hband', 'bollinger_lband',  'mfi', 'stochastic','mid_channel','close']]
     # X2 = data[['rsi', 'macd', 'bollinger_hband', 'bollinger_lband',  'mfi', 'stochastic','mid_channel','current']]
-    X2 = data[['close','volume','rsi','macd','macd_diff','williams_r','dpo']]
+    # X2 = data[['close','volume','rsi','macd','macd_diff','williams_r','dpo']]
+    X2 = data[['stochastic', 'macd','close','volume']]
 
     pca = PCA(n_components=0.95)
     
