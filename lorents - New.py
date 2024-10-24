@@ -1,4 +1,13 @@
 from imports import *
+
+import os
+
+def install_requirements():
+    os.system('pip install -r requirements.txt')
+
+# if __name__ == "__main__":
+    # install_requirements()
+
 # if __name__ == '__main__':
 #     multiprocessing.freeze_support()
 #     BeautyChart.main()
@@ -39,7 +48,7 @@ expectedCombineModel=0.40
 expectedLstmModel=0.4
 expectedSvmModel=0.40
 
-trainTimeStamp=datetime.now
+trainTimeStamp=datetime.now()
 
 #بارگذاری داده ها
 # symbol="BTC-USDT"
@@ -1309,6 +1318,7 @@ def TrainLstmSVm():
     data = dropNaFix(data)
     y = data["target"]
     # X = data[['rsi', 'macd', 'bollinger_hband', 'bollinger_lband',  'mfi', 'stochastic','mid_channel','current']]
+    # X = data[['close','volume','rsi','macd','macd_diff','williams_r','dpo']]
     X = data[['close','volume','rsi','macd','macd_diff','williams_r','dpo']]
 
     # pca = PCA(n_components=0.95)  # Keep 95% of the variance
@@ -1693,7 +1703,8 @@ def send_prediction_to_telegram(prediction,timestamp,symbol,accuracy,price,actio
     # bot.sendMessage(chat_id=telegram_channel_id,text=message)
     if csv==False:
         try:
-            bot.send_message(telegram_channel_id, message)
+            print("send")
+            # bot.send_message(telegram_channel_id, message)
         except:
             print("could not connect to telegram")
 
@@ -1809,7 +1820,7 @@ def determine_target(percent_change,expectedChange):
 def FirstTrain():
     global data
     global trainTimeStamp
-    print("while On")
+    print("firstTrain On")
     current_time=get_cyprus_time()
 
     #1. بارگذاری داده ها
@@ -1823,11 +1834,11 @@ def FirstTrain():
         data['next_close'] = data['close'].shift(-shiftedNumber)
         data['target']= (data['next_close']>data['close']).astype(int)
         data=add_indicators(data)
-        CalculateProfit()     
+        # CalculateProfit()     
                     
     
-    # lstm_model,svm_model,combine_model,accuracy=TrainLstmSVm()
-    # printAcc= round(((accuracy)*100),3)
+    lstm_model,svm_model,combine_model,accuracy=TrainLstmSVm()
+    printAcc= round(((accuracy)*100),3)
     # if(lstm_model!= None):
     #     try:
     #         joblib.dump(lstm_model, f'model/lstm_model-{symbol}-{timeframe}-{printAcc}.joblib')
@@ -1843,7 +1854,7 @@ def FirstTrain():
     #         joblib.dump(combine_model, f'model/combine_model{symbol}-{timeframe}-{printAcc}.joblib')
     #     except e:
     #         print("could not Save combine Model :{e}")
-    # trainTimeStamp=datetime.now()
+    trainTimeStamp=datetime.now()
     return lstm_model,svm_model,combine_model,accuracy
 
 def CalculateProfit():

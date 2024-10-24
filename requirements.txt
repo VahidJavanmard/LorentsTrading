@@ -6,3 +6,8 @@ tensorflow
 matplotlib
 scipy
 sklearn
+seaborn
+os
+random
+datetime
+
